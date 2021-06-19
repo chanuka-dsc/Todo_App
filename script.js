@@ -13,10 +13,12 @@ taskContainer.innerHTML = "";
 
 // creating the delete function
 const deltask = function (index) {
-  if (index > 0 && index < taskList.length) {
+  if (index >= 0 && index <= taskList.length) {
+    console.log(index);
     taskList.splice(index - 1, 1);
   } else {
-    alert("Invalid index");
+    console.log(index);
+    alert(`Invalid index : ${index}`);
   }
 };
 
@@ -25,10 +27,13 @@ const displayTasks = function (arr) {
   taskContainer.innerHTML = "";
   arr.forEach((element, i) => {
     const html = `<div class="indi-task">
-    <p class="task"> Task number ${i + 1}: ${element}</p>
-  </div>`;
+    <p class="task"> Task number ${
+      i + 1
+    }: ${element} <button class="del-btn del${i}">Delete task</button></p>
+    </div>`;
     taskContainer.insertAdjacentHTML("afterbegin", html);
   });
+  createDeleteFunc();
 };
 
 // eventl listner for adding a task
@@ -38,11 +43,25 @@ addTaskBtn.addEventListener("click", function (e) {
   taskList.push(task);
   displayTasks(taskList);
   taskIn.value = "";
+  createDeleteFunc();
 });
 
-deleteTaskBtn.addEventListener("click", function (e) {
-  e.preventDefault();
-  const deletIndex = Number(deleteIn.value);
-  deltask(deletIndex);
-  displayTasks(taskList);
-});
+// delete task using index
+
+// deleteTaskBtn.addEventListener("click", function (e) {
+//   e.preventDefault();
+//   const deletIndex = Number(deleteIn.value);
+//   console.log("click");
+//   deltask(deletIndex);
+//   displayTasks(taskList);
+// });
+
+const createDeleteFunc = function () {
+  const delbuttons = document.querySelectorAll(".del-btn");
+  delbuttons.forEach(function (element, index, arr) {
+    element.addEventListener("click", function () {
+      deltask(arr.length - index);
+      displayTasks(taskList);
+    });
+  });
+};
